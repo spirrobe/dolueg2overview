@@ -2,6 +2,7 @@
 def getdata4html(code,
                  timeoffset=0,
                  precision=1,
+                 pattern=['[', ']'],
                  quiet=True,
                  ):
 
@@ -16,16 +17,15 @@ def getdata4html(code,
     from met.util.winddirection2string import winddirection2string
     from met.uvb.uvbindex import uvbindex
 
-
     if type(code) == str:
         codes = [i.strip() for i in code.split(',')]
     else:
         codes = code.strip()
 
-    if codes[0][0] == '[':
+    if codes[0][0] == pattern[0]:
         codes[0] = codes[0][1:]
 
-    if codes[-1][-1] == ']':
+    if codes[-1][-1] == pattern[-1]:
         codes[-1] = codes[-1][:-1]
 
     codes = [i.lower() for i in codes]
