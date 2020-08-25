@@ -12,7 +12,7 @@ def htmlfileprocessor(templatefile,
     import socket
     from sql.util import getdata4html
 
-    def codeextractor(line,pattern):
+    def codeextractor(line, pattern=['[', ']']):
         code = line[line.index(pattern[0])+1:line.index(pattern[1])]
 
         # too short cant be a database code or other
