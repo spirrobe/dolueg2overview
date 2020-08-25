@@ -4,8 +4,8 @@
 
 def htmlfileprocessor(templatefile,
                       outputfile,
-                      # defines how the codes are indicates in the html file
-                      pattern=['[',']']
+                      # defines how the codes are indicated in the html file
+                      pattern=['[', ']']
                       ):
 
     # FIX THESE IMPORT RELATIVE TO YOUR SETUP
@@ -21,7 +21,7 @@ def htmlfileprocessor(templatefile,
 
             return pattern[0]+code[4*int('unit' in code.lower()):]+pattern[1]
         else:
-            return getdata4html(code)
+            return getdata4html(code, pattern=['[',']'])
 
     with open(templatefile) as fo:
         lines = fo.readlines()
@@ -44,7 +44,7 @@ def htmlfileprocessor(templatefile,
             for n in range(min([line.count(pattern[0]),
                                 line.count(pattern[0])])):
 
-                value = codeextractor(line, pattern)
+                value = codeextractor(line, pattern=pattern)
                 oline += line[:line.index(pattern[0])] + value
                 line = line[line.index(pattern[1])+1:]
 
