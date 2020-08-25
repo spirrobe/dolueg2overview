@@ -4,13 +4,7 @@ def getclimatedata(code, month, issuncode=False):
     import pandas as pd
     import calendar
 
-    if 'met-pc' in socket.gethostname():
-#       from mcr.sql.util import gettimezones
-        from mcr.sql.util import getdata
-    elif 'met-ws' in socket.gethostname():
-        from sql.util import getdata
-    else:
-        from mcr.sql.util import getdata
+    from sql.util import getdata
 
     if type(code) == str:
         codes = code.split(',')

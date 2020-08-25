@@ -8,8 +8,6 @@ def htmlfileprocessor(templatefile,
                       pattern=['[', ']']
                       ):
 
-    # FIX THESE IMPORT RELATIVE TO YOUR SETUP
-    import socket
     from sql.util import getdata4html
 
     def codeextractor(line, pattern=['[', ']']):
