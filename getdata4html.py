@@ -9,8 +9,10 @@ def getdata4html(code,
     import datetime
     import numpy as np
 
-    from sql.util import gettimezones
-    from sql.util import getdata
+    # FIX THESE WITH YOUR IMPORTS TO WHERE YOU ARE RUNNING PYTHON
+    import gettimezones
+    import getclimatedata
+    import getdata
     from met.util.winddirection2string import winddirection2string
     from met.uvb.uvbindex import uvbindex
 
