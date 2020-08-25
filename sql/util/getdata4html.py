@@ -289,6 +289,10 @@ def getdata4html(code,
         else:
             value = '*'
 
+    if value == '*':
+        # no use to continue as the "current" data is not yet in the database, return
+        return strformat.format(value)
+
     if valueprocessing[0] == 'hr':
         value = winddirection2string(value)
         strformat = '{}'
