@@ -10,7 +10,6 @@ In general, codes that should be replaced are in square brackets.
 
 #### Current values of a time seriees (BKLIDTA9)
 ```
-```
 [BKLIDTA9,ACT]
 ```
 which is interpreted as getting data from the current computer time of BKLIDTA9 (a temperature time series in this case)
