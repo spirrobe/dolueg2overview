@@ -6,7 +6,27 @@ A Python program (htmlfileprocessor.py) fills in the correct values (by using a 
 
 [The example file ](https://mcr.unibas.ch/dolueg2overview/template.txt/) is the same that is used for [the live landing page ](https://mcr.unibas.ch/dolueg).
 
-In general, codes that should be replaced are in square brackets.
+
+## Requirements
+
+numpy and pandas are required
+
+Two functions need to be written as they are particular to the organisation of our database
+The first one is a getdata functiion that is already needed for the [dolueg2figures](https:/github.com/spirrobe/dolueg2figures)
+The second one is "gettimezones", a function that returns the timezone the codes are saved in. If all your codes are in UTC then you can remove this part. 
+All other functions are provided in the top directory. 
+*It is prudent to move these to subdirectories and adjust the imports to your setup.*
+
+## Examples
+
+*In general, codes that should be replaced are in square brackets.*
+htmlfileprocessor has a "pattern" keyword to change these in case another set is prefered.
+
+#### Creating file from template
+No explcit return value is defined (detaults to True by Python)
+```
+htmlfileprocessor('template.txt', 'current.html')
+```
 
 #### Current values of a time seriees (BKLIDTA9)
 ```
@@ -47,6 +67,7 @@ Given a windcode (or any code for that matter), report a string (e.g. NW)
 [BLEOWDA1,ACT,1,HR]
 [BLEOWDA1,ACT,1,HRA]
 ```
+A number for the time frame has to be given (and be non-zero), even is ACT takes in the end the last value for HRA/HR to work.
 The second call with the A at the end introduces an unicode arrow in addition, making it obvious it is where wind is coming from
 Since the available unicode arrows are limited to the 4 main directions (N/E/S/W) and the 4 subdirection (NE/SE/SW/NW) only those are reported as well
 
@@ -86,4 +107,12 @@ Check the function getclimatedata.py for details
 [BLER#DTA1,AVG,M1]
 [BLER#PCT1,AVG,M1]
 [BLER#SDA1,SUN,M1]
+```
+
+#### UVBINDEX
+For completeness: uvbindex is provided as htmlfileprocessor can get uvbindex values according to [meteoschweiz](http://www.meteoschweiz.ch/de/Freizeit/Gesundheit/UV_Index/uv_protec.shtml)
+Currently, no UV measurements are conducted by us, therefore no example is contained in the template
+
+```
+[BKLIUVB1,ACT, UV]
 ```
