@@ -6,6 +6,7 @@ def getdata4html(code,
                  quiet=True,
                  ):
 
+
     import time
     import datetime
     import numpy as np
@@ -16,7 +17,8 @@ def getdata4html(code,
     from sql.util.getdata import getdata
     from met.util.winddirection2string import winddirection2string
     from met.uvb.uvbindex import uvbindex
-
+  
+  
     if type(code) == str:
         codes = [i.strip() for i in code.split(',')]
     else:
@@ -165,11 +167,12 @@ def getdata4html(code,
                 else:
                     print('Not a valid time code (D or H)')
             else:
-                day, hour = int(codes[2]), 0
+                day, hour = int(codes[2]), now.hour
                 minute, second = 0, 0
 
-            t1 -= datetime.timedelta(minutes=now.minute,
+            t1 -= datetime.timedelta(minutes=now.minute % 10,
                                      seconds=now.second,
+                                     microseconds=now.microsecond,
                                      )
         # rounding to 10 minutes included to yield the same result
         # as the aml code that was used to derive this function
@@ -188,7 +191,7 @@ def getdata4html(code,
                                  seconds=second)
 
     if acode:
-       
+
         # adjust our t0 and t1 from our current timezone (local, system)
         # to the one of the timeseries that we are trying to get
         # i.e. when the timeseries is actually in MEZ but we are in MESZ
@@ -203,13 +206,13 @@ def getdata4html(code,
         else:
             climatecode = False
 
-        timezone = (gettimezones(codes[0]))[codes[0]]
+        localtz = datetime.datetime.now().astimezone().tzinfo
+        timezone = gettimezones(codes[0])[codes[0]]
 
         tzdt = timezone * anhour
-
         # account for difference between local and db time
-        t0 -= tzdt
-        t1 -= tzdt
+        t0 = t0.replace(tzinfo=localtz, second=0, microsecond=0) - tzdt
+        t1 = t1.replace(tzinfo=localtz, second=0, microsecond=0) - tzdt
 
         if climatecode:
             if codes[1] == 'sun':
@@ -218,9 +221,19 @@ def getdata4html(code,
                 issuncode = False
             data = getclimatedata(codes[0], t1.month, issuncode)[codes[0]]
         else:
-            data, meta = getdata(codes[0], t0=t0, t1=t1, )
 
-        if data is None:
+            data, meta = getdata(codes[0],
+                                 t0=t0,
+                                 t1=t1,
+                                 ensureendpoints=False,
+                                 )
+            if data is None or data is False:
+                # this gets returned elsewhere
+                pass
+            else:
+                data = data.tz_convert(localtz)
+
+        if data is None or data is False:
             return '*'
 
         if not quiet:
@@ -242,11 +255,17 @@ def getdata4html(code,
         else:
             # we changed the time so we can match sevveral aggs with one elif
             if agg in ['act', 'v06', 's12']:
-                value = data.tail(1).values[0][0]
-                if np.isnan(value):
+                value = data[t1:]
+                if value.empty:
+                    value = '*'
+                    strformat = '{}'
+                else:
+                    value = value.values[0][0]
+                if value != '*' and np.isnan(value):
                     value = '*'
                     strformat = '{}'
             elif agg in ['s06', 'sum']:
+
                 value = data.sum().values[0]
             elif agg == 'min':
                 value = data.min().values[0]
@@ -312,3 +331,4 @@ def getdata4html(code,
         value = value*valueprocessing[1]
 
     return strformat.format(value)
+
